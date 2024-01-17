@@ -14,26 +14,21 @@ jobs:
       - image: circleci/python:3.8
     steps:
       - checkout
-
+      
       - run:
-    name: Run schemachange
-    command: |
-      echo "CIRCLE_WORKING_DIRECTORY: $CIRCLE_WORKING_DIRECTORY"
-      python --version
-      echo "Step 1: Installing schemachange"
-      pip install schemachange
-
-      echo "Step 2: Running schemachange"
-      schemachange -c $CIRCLE_WORKING_DIRECTORY/migrations/schemachange.toml -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -p $SNOWFLAKE_PASSWORD --create-change-history-table --root-folder $CIRCLE_WORKING_DIRECTORY/migrations
-    environment:
-      SF_ACCOUNT: ${SF_ACCOUNT}
-      SF_USERNAME: ${SF_USERNAME}
-      SF_ROLE: ${SF_ROLE}
-      SF_WAREHOUSE: ${SF_WAREHOUSE}
-      SF_DATABASE: ${SF_DATABASE}
-      SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
-
-
-
-
+          name: Run schemachange
+          command: |
+            echo "CIRCLE_WORKING_DIRECTORY: $CIRCLE_WORKING_DIRECTORY"
+            python --version
+            echo "Step 1: Installing schemachange"
+            pip install schemachange
             
+            echo "Step 2: Running schemachange"
+            schemachange -f $CIRCLE_WORKING_DIRECTORY/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+          environment:
+            SF_ACCOUNT: ${SF_ACCOUNT}
+            SF_USERNAME: ${SF_USERNAME}
+            SF_ROLE: ${SF_ROLE}
+            SF_WAREHOUSE: ${SF_WAREHOUSE}
+            SF_DATABASE: ${SF_DATABASE}
+            SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
