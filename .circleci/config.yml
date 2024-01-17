@@ -1,39 +1,41 @@
 version: 2.1
 
 jobs:
-  build:
+  deploy-snowflake-changes-job:
     docker:
-      - image: python:3.8
+      - image: cimg/python:3.8
 
     steps:
       - checkout
 
-      # Print the current working directory for debugging
       - run:
-          name: Print working directory
-          command: pwd
+          name: Print Working Directory
+          command: echo "Working Directory:" $PWD
 
-      # Change the working directory to the correct path
-      - run:
-          name: Change working directory
-          command: cd migrations
-
-      # Install dependencies or run any setup steps here if needed
-      - run:
-          name: Install dependencies
-          command: |
-            pip install schemachange
-
-      # Run schemachange command
       - run:
           name: Run schemachange
+          environment:
+            SF_ACCOUNT: $SF_ACCOUNT
+            SF_USERNAME: $SF_USERNAME
+            SF_ROLE: $SF_ROLE
+            SF_WAREHOUSE: $SF_WAREHOUSE
+            SF_DATABASE: $SF_DATABASE
+            SNOWFLAKE_PASSWORD: $SF_PASSWORD
           command: |
-            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+            python --version
+            echo "Step 1: Installing schemachange"
+            pip install schemachange
 
-    environment:
-      SF_ACCOUNT: ${SF_ACCOUNT}
-      SF_USERNAME: ${SF_USERNAME}
-      SF_ROLE: ${SF_ROLE}
-      SF_WAREHOUSE: ${SF_WAREHOUSE}
-      SF_DATABASE: ${SF_DATABASE}
-      SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
+            echo "Step 2: Running schemachange"
+            schemachange -f $PWD/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy-snowflake-changes-job:
+          filters:
+            branches:
+              only:
+                - main
+          when: on_success
