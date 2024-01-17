@@ -10,7 +10,7 @@ jobs:
 
       - run:
           name: Print Working Directory
-          command: echo "Working Directory:" $PWD
+          command: echo "Working Directory: $PWD"
 
       - run:
           name: Run schemachange
