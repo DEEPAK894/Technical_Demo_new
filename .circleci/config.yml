@@ -1,35 +1,39 @@
 version: 2.1
-orbs:
-  python: circleci/python@1.2.0
-
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - deploy-snowflake-changes-job
 
 jobs:
-  deploy-snowflake-changes-job:
+  build:
     docker:
-      - image: circleci/python:3.8
+      - image: python:3.8
+
     steps:
       - checkout
-      
+
+      # Print the current working directory for debugging
+      - run:
+          name: Print working directory
+          command: pwd
+
+      # Change the working directory to the correct path
+      - run:
+          name: Change working directory
+          command: cd migrations
+
+      # Install dependencies or run any setup steps here if needed
+      - run:
+          name: Install dependencies
+          command: |
+            pip install schemachange
+
+      # Run schemachange command
       - run:
           name: Run schemachange
           command: |
-            echo "Working directory: $CIRCLE_WORKING_DIRECTORY"
-            echo "CIRCLE_WORKING_DIRECTORY: $CIRCLE_WORKING_DIRECTORY"
-            python --version
-            echo "Step 1: Installing schemachange"
-            pip install schemachange
-            
-            echo "Step 2: Running schemachange"
-            schemachange -f $CIRCLE_WORKING_DIRECTORY/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
-          environment:
-            SF_ACCOUNT: ${SF_ACCOUNT}
-            SF_USERNAME: ${SF_USERNAME}
-            SF_ROLE: ${SF_ROLE}
-            SF_WAREHOUSE: ${SF_WAREHOUSE}
-            SF_DATABASE: ${SF_DATABASE}
-            SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
+            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+
+    environment:
+      SF_ACCOUNT: ${SF_ACCOUNT}
+      SF_USERNAME: ${SF_USERNAME}
+      SF_ROLE: ${SF_ROLE}
+      SF_WAREHOUSE: ${SF_WAREHOUSE}
+      SF_DATABASE: ${SF_DATABASE}
+      SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
