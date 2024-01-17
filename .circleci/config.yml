@@ -26,7 +26,7 @@ jobs:
             echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
             python --version
             echo "Step 1: Installing schemachange"
-            schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+            schemachange -f $GITHUB_WORKSPACE -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
           environment:
             SF_ACCOUNT: ${SF_ACCOUNT}
             SF_USERNAME: ${SF_USERNAME}
