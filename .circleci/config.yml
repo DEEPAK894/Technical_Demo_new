@@ -11,7 +11,7 @@ jobs:
       SF_ROLE: ACCOUNTADMIN
       SF_WAREHOUSE: COMPUTE_WH
       SF_DATABASE: SF_CICD
-      SF_PASSWORD: Deepu@822
+      SF_PASSWORD: deepu@822
       SF_URL: https://rc56421.us-east-2.aws.snowflakecomputing.com
 
     steps:
