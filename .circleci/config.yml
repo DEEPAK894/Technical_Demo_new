@@ -1,36 +1,32 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@1.2.0
-
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - deploy-snowflake-changes-job
-
 jobs:
   deploy-snowflake-changes-job:
     docker:
       - image: circleci/python:3.8
+
     steps:
       - checkout
+
       - run:
-          name: Install Dependencies
+          name: Use Python 3.8.x
           command: |
-            python -m pip install --upgrade pip
+            echo "Python version: $(python --version)"
+      
+      - run:
+          name: Install schemachange
+          command: |
             pip install schemachange
+
       - run:
           name: Run schemachange
-          command: |
-            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-            python --version
-            echo "Step 1: Installing schemachange"
-            schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
           environment:
-            SF_ACCOUNT: ${SF_ACCOUNT}
-            SF_USERNAME: ${SF_USERNAME}
-            SF_ROLE: ${SF_ROLE}
-            SF_WAREHOUSE: ${SF_WAREHOUSE}
-            SF_DATABASE: ${SF_DATABASE}
-            SNOWFLAKE_PASSWORD: ${SF_PASSWORD}
+            SF_ACCOUNT: $SF_ACCOUNT
+            SF_USERNAME: $SF_USERNAME
+            SF_ROLE: $SF_ROLE
+            SF_WAREHOUSE: $SF_WAREHOUSE
+            SF_DATABASE: $SF_DATABASE
+            SNOWFLAKE_PASSWORD: $SF_PASSWORD
+          command: |
+            echo "WORKING_DIRECTORY: $PWD"
+            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE8.CHANGE_HISTORY --create-change-history-table
