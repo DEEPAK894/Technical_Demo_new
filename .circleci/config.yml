@@ -29,4 +29,14 @@ jobs:
             SNOWFLAKE_PASSWORD: $SF_PASSWORD
           command: |
             echo "WORKING_DIRECTORY: $PWD"
-            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE8.CHANGE_HISTORY --create-change-history-table
+            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE7.CHANGE_HISTORY --create-change-history-table
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy-snowflake-changes-job:
+          filters:
+            branches:
+              only:
+                - main
