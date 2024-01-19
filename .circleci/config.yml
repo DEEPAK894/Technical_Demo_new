@@ -5,6 +5,15 @@ jobs:
     docker:
       - image: circleci/python:3.8
 
+    environment:
+      SF_ACCOUNT: LJYHXDV-HY17256
+      SF_USERNAME: DEEPAK
+      SF_ROLE: ACCOUNTADMIN
+      SF_WAREHOUSE: COMPUTE_WH
+      SF_DATABASE: SF_CICD
+      SF_PASSWORD: Deepu@822
+      SF_URL: https://rc56421.us-east-2.aws.snowflakecomputing.com
+
     steps:
       - checkout
 
@@ -20,13 +29,6 @@ jobs:
 
       - run:
           name: Run schemachange
-          environment:
-            SF_ACCOUNT: $SF_ACCOUNT
-            SF_USERNAME: $SF_USERNAME
-            SF_ROLE: $SF_ROLE
-            SF_WAREHOUSE: $SF_WAREHOUSE
-            SF_DATABASE: $SF_DATABASE
-            SNOWFLAKE_PASSWORD: $SF_PASSWORD
           command: |
             echo "WORKING_DIRECTORY: $PWD"
             schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE7.CHANGE_HISTORY --create-change-history-table
