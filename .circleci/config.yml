@@ -30,13 +30,13 @@ jobs:
           name: Run schemachange
           command: |
             echo "WORKING_DIRECTORY: $PWD"
-            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE7.CHANGE_HISTORY --create-change-history-table
+            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE8.CHANGE_HISTORY --create-change-history-table
 
       - run:
           name: Run schemachange with verbose logging
           command: |
             echo "WORKING_DIRECTORY: $PWD"
-            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE7.CHANGE_HISTORY --create-change-history-table -vvv
+            schemachange -f migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE9.CHANGE_HISTORY --create-change-history-table -vvv
 
 workflows:
   version: 2
