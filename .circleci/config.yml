@@ -4,7 +4,6 @@ jobs:
   deploy-snowflake-changes-job:
     docker:
       - image: circleci/python:3.8
-
     environment:
       SF_ACCOUNT: LJYHXDV-HY17256
       SF_USERNAME: DEEPAK
